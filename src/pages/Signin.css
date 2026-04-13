@@ -1,0 +1,160 @@
+:root {
+  --senet-orange: #f0660c;
+  --signin-bg: linear-gradient(180deg, #42281a 0%, #000000 100%);
+}
+
+.signin-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-screen {
+  width: 480px;
+  height: 100vh;
+  background: var(--signin-bg);
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.7);
+}
+
+.signin-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Carousel */
+.signin-carousel {
+  width: 320px;
+  height: 320px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.signin-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.signin-slide.active {
+  opacity: 1;
+}
+
+.signin-food-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+}
+
+/* Typography */
+.signin-text-group {
+  margin-top: 40px;
+}
+
+.signin-title {
+  color: white;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.text-orange {
+  color: var(--senet-orange);
+  font-weight: 600;
+}
+
+.signin-subtitle {
+  color: #ddd;
+  font-size: 20px;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.signin-actions {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 40px;
+}
+
+.signin-btn-main {
+  display: block;
+  width: 85%;
+  margin: 0 auto;
+  background-color: var(--senet-orange);
+  color: white;
+  text-decoration: none;
+  padding: 18px;
+  border-radius: 40px;
+  font-size: 22px;
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+
+.signin-btn-main:active {
+  transform: scale(0.96);
+}
+
+.signin-divider {
+  display: flex;
+  align-items: center;
+  width: 75%;
+  margin: 25px auto;
+}
+
+.signin-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.signin-or {
+  color: white;
+  padding: 0 12px;
+  font-size: 16px;
+}
+
+.signin-socials {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.signin-social-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.signin-social-btn img {
+  width: 26px;
+}
+
+.signin-footer-text {
+  color: white;
+  font-size: 18px;
+}
+
+.signin-signup-link {
+  color: var(--senet-orange);
+  text-decoration: none;
+  font-weight: 600;
+}
