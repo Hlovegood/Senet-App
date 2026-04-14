@@ -12,6 +12,7 @@ import img7 from '../assets/Imgs/Carousel-img (7).png';
 import img8 from '../assets/Imgs/Carousel-img (8).png';
 import img9 from '../assets/Imgs/Carousel-img (9).png';
 
+import senetIcon from '../assets/icons/Senet icon.png';
 import googleIcon from '../assets/icons/Google Icon.png';
 import appleIcon from '../assets/icons/Apple Icon.png';
 import facebookIcon from '../assets/icons/Facebook Icon.png';
@@ -30,20 +31,36 @@ const carouselImages = [
 
 export default function Signin() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const splashTimer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3500);
+
+    const carouselTimer = setInterval(() => {
       setCurrentSlide((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1));
     }, 3000);
-    return () => clearInterval(timer);
+
+    return () => {
+      clearTimeout(splashTimer);
+      clearInterval(carouselTimer);
+    };
   }, []);
 
   return (
     <div className="signin-wrapper">
+      {showSplash && (
+        <div className="full-screen-splash">
+          <div className="splash-bundle">
+            <img src={senetIcon} alt="Logo" className="splash-logo-animated" />
+            <h1 className="splash-text-animated">SENET</h1>
+          </div>
+        </div>
+      )}
+
       <div className="signin-screen">
-        <div className="signin-content">
-          
-          {/* Automatic Carousel */}
+        <div className={`signin-content ${!showSplash ? 'content-visible' : 'content-hidden'}`}>
           <div className="signin-carousel">
             {carouselImages.map((img, index) => (
               <div
@@ -51,13 +68,12 @@ export default function Signin() {
                 className={`signin-slide ${index === currentSlide ? 'active' : ''}`}
               >
                 {index === currentSlide && (
-                  <img src={img.src} alt={`Food ${img.id}`} className="signin-food-img" />
+                  <img src={img.src} alt="Food" className="signin-food-img" />
                 )}
               </div>
             ))}
           </div>
 
-          {/* Welcome Text */}
           <div className="signin-text-group">
             <h1 className="signin-title">
               Welcome Back To <span className="text-orange">Senet</span>
@@ -65,7 +81,6 @@ export default function Signin() {
             <p className="signin-subtitle">Be your own personal chef</p>
           </div>
 
-          {/* Action Area */}
           <div className="signin-actions">
             <Link to="/SigninFlow" className="signin-btn-main">
               Login
@@ -78,9 +93,9 @@ export default function Signin() {
             </div>
 
             <div className="signin-socials">
-              <button className="signin-social-btn"><img src={googleIcon} alt="Google" /></button>
-              <button className="signin-social-btn"><img src={appleIcon} alt="Apple" /></button>
-              <button className="signin-social-btn"><img src={facebookIcon} alt="Facebook" /></button>
+              <button className="signin-social-btn"><img src={googleIcon} alt="G" /></button>
+              <button className="signin-social-btn"><img src={appleIcon} alt="A" /></button>
+              <button className="signin-social-btn"><img src={facebookIcon} alt="F" /></button>
             </div>
 
             <p className="signin-footer-text">
