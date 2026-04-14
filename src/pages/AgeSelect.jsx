@@ -8,7 +8,7 @@ import senetIcon from '../assets/icons/Senet icon.png';
 const ageOptions = [
   { id: '14-21', label: '14-21', icons: ['👦🏾', '👧🏾'] },
   { id: '22-30', label: '22-30', icons: ['👨🏾'] },
-  { id: '31-40', label: '31-40', icons: ['👨🏾‍𝦑', '👩🏾‍𝦑'] },
+  { id: '31-40', label: '31-40', icons: ['👨🏾‍', '👩🏾‍'] },
   { id: '40+', label: '40+', icons: ['👨🏼‍🦳'] },
   { id: 'prefer-not-say', label: 'Prefer Not Say', icons: [] }
 ];
@@ -17,52 +17,53 @@ export default function AgeSelection() {
   const [selectedAge, setSelectedAge] = useState(null);
   const navigate = useNavigate();
 
-  const handleContinue = () => {
+  const handleRedirect = () => {
     if (selectedAge) {
-      navigate('/cuisineselect');
+      navigate('/target');
     }
   };
 
   return (
-    <div className="flow-wrapper">
-      <div className="flow-screen age-selection-screen">
-        <div className="flow-header age-header">
-          <Link to="/signupflow" className="back-button">
-            <ChevronLeft size={28} color="#fff" />
+    <div className="age-wrapper">
+      <div className="age-screen">
+        <div className="age-header">
+          <Link to="/signup" className="back-circle">
+            <ChevronLeft size={24} color="#fff" />
           </Link>
-          <div className="header-brand-center">
-            <img src={senetIcon} alt="Senet" className="brand-logo-small" />
-            <span className="brand-text-small">Senet</span>
+          <div className="age-brand">
+            <img src={senetIcon} alt="Senet" className="age-logo" />
+            <span className="age-brand-name">Senet</span>
           </div>
-          <Link to="/cuisineselect" className="skip-btn-text">
+          <Link to="/cuisineselect" className="skip-link-btn">
             Skip
           </Link>
         </div>
 
-        <h1 className="age-prompt-title">How old are you?</h1>
+        <h2 className="age-title">How old are you?</h2>
 
-        <div className="age-options-list">
+        <div className="age-list">
           {ageOptions.map((option) => (
-            <button 
+            <div 
               key={option.id}
-              className={`age-option-item ${selectedAge === option.id ? 'active' : ''}`}
+              className={`age-item ${selectedAge === option.id ? 'active' : ''}`}
               onClick={() => setSelectedAge(option.id)}
             >
-              <span className="age-radio-circle"></span>
-              <div className="age-label-group">
-                <span className="age-label-text">{option.label}</span>
-                <span className="age-label-emojis">{option.icons.join(' ')}</span>
+              <div className="radio-outer">
+                {selectedAge === option.id && <div className="radio-inner" />}
               </div>
-            </button>
+              <span className="age-text">
+                {option.label} {option.icons.join(' ')}
+              </span>
+            </div>
           ))}
         </div>
 
-        <div className="flow-action-footer">
+        <div className="age-footer">
           <button 
-            type="submit" 
-            className="age-submit-btn" 
+            type="button" 
+            className="continue-redirect-btn" 
             disabled={!selectedAge}
-            onClick={handleContinue}
+            onClick={handleRedirect}
           >
             Continue
           </button>

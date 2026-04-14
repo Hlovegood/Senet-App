@@ -1,129 +1,143 @@
 :root {
   --senet-orange: #f0660c;
-  --flow-bg: linear-gradient(180deg, #3d2417 0%, #000000 100%);
+  --bg-gradient: linear-gradient(180deg, #3d2417 0%, #000000 100%);
 }
 
-.age-selection-screen {
-  padding-bottom: 20px;
+.age-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.age-screen {
+  width: 480px;
+  height: 100vh;
+  background: var(--bg-gradient);
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .age-header {
+  display: flex;
   justify-content: space-between;
-  margin-bottom: 40px;
+  align-items: center;
+  margin-bottom: 60px;
 }
 
-.header-brand-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+.back-circle {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.age-brand {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.brand-text-small {
-  color: white;
-  font-size: 12px;
-  margin-top: 2px;
+.age-logo {
+  width: 40px;
+  margin-bottom: 4px;
 }
 
-.skip-btn-text {
+.age-brand-name {
+  color: #fff;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.skip-link-btn {
   background: var(--senet-orange);
   color: white;
   text-decoration: none;
-  padding: 10px 25px;
+  padding: 8px 20px;
   border-radius: 20px;
+  font-weight: 600;
   font-size: 16px;
-  font-weight: 500;
 }
 
-.age-prompt-title {
+.age-title {
   color: white;
-  font-size: 26px;
-  font-weight: 500;
+  font-size: 28px;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
+  font-weight: 400;
 }
 
-.age-options-list {
+.age-list {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  padding: 0 10px;
+  gap: 30px;
 }
 
-.age-option-item {
-  background: transparent;
-  border: none;
+.age-item {
   display: flex;
   align-items: center;
   cursor: pointer;
-  width: 100%;
-  text-align: left;
-  padding: 0;
+  transition: opacity 0.2s;
 }
 
-.age-radio-circle {
-  width: 35px;
-  height: 35px;
-  border: 2px solid white;
+.radio-outer {
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
   border-radius: 50%;
   margin-right: 20px;
-  position: relative;
-  transition: border-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.age-option-item.active .age-radio-circle {
+.age-item.active .radio-outer {
   border-color: var(--senet-orange);
 }
 
-.age-option-item.active .age-radio-circle::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.radio-inner {
   width: 20px;
   height: 20px;
   background-color: var(--senet-orange);
   border-radius: 50%;
 }
 
-.age-label-group {
-  display: flex;
-  align-items: center;
-}
-
-.age-label-text {
+.age-text {
   color: white;
   font-size: 24px;
-  font-weight: 400;
 }
 
-.age-label-emojis {
-  font-size: 22px;
-  margin-left: 10px;
-}
-
-.flow-action-footer {
+.age-footer {
   margin-top: auto;
-  padding: 0 10px;
 }
 
-.age-submit-btn {
+.continue-redirect-btn {
+  width: 100%;
+  height: 60px;
   background: var(--senet-orange);
   color: white;
   border: none;
-  height: 60px;
   border-radius: 30px;
   font-size: 20px;
   font-weight: 600;
-  width: 100%;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: transform 0.1s, opacity 0.2s;
 }
 
-.age-submit-btn:disabled {
-  opacity: 0.6;
+.continue-redirect-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.continue-redirect-btn:active {
+  transform: scale(0.98);
 }
