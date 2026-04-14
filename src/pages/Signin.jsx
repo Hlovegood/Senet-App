@@ -81,7 +81,7 @@ export default function Signin() {
           </div>
 
           <div className="signin-actions">
-            <Link to="/SigninFlow" className="signin-btn-main">
+            <Link to="/signinflow" className="signin-btn-main">
               Login
             </Link>
 

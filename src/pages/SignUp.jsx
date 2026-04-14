@@ -28,7 +28,7 @@ const carouselImages = [
 
 ];
 
-export default function Signin() {
+export default function SignUp() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSplash, setShowSplash] = useState(true);
 
@@ -81,7 +81,7 @@ export default function Signin() {
           </div>
 
           <div className="signin-actions">
-            <Link to="/SigninFlow" className="signin-btn-main">
+            <Link to="/signupflow" className="signin-btn-main">
               Sign Up
             </Link>
 
