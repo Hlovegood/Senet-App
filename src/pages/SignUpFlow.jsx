@@ -53,7 +53,7 @@ export default function SignupFlow() {
       if (supabaseError) throw supabaseError;
 
       alert('Account created successfully!');
-      navigate('/signin');
+      navigate('/ageselect');
     } catch (err) {
       setError(err.message || 'An error occurred during sign up.');
     } finally {
