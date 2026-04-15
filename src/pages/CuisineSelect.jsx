@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import { Link } from "react-router-dom";
 import CuisineCard from "../components/CuisineCard";
@@ -34,8 +33,6 @@ const cuisines = [
 
 export default function CuisineSelection() {
   const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const navigate = useNavigate();
-
   const toggleCuisine = (id) => {
     setSelectedCuisines((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],

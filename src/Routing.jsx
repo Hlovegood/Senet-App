@@ -8,6 +8,8 @@ import Signupflow from './pages/SignUpFlow';
 import AgeSelect from './pages/AgeSelect';
 import TargetSelect from './pages/TargetSelect';
 import CuisineSelect from './pages/CuisineSelect';
+import Allergy from './pages/AllergySelect';
+
 const Routing = () => {
     return ( <>
     <BrowserRouter>
@@ -19,6 +21,7 @@ const Routing = () => {
         <Route path='/ageselect' element={<AgeSelect/>}/>
         <Route path='/target' element={<TargetSelect/>}/>
         <Route path='/cuisines' element={<CuisineSelect/>}/>
+        <Route path='/allergy' element={<Allergy/>}/>
         <Route path='/feed' element={<Home/>}/>
         
     
