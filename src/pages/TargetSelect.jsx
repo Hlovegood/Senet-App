@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
-import './TargetSelect.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
+import "./TargetSelect.css";
 
-import senetIcon from '../assets/icons/Senet icon.png';
+import senetIcon from "../assets/icons/Senet icon.png";
 
 const targetOptions = [
-  { id: 'save-money', label: 'Save money', icon: '💵' },
-  { id: 'eat-healthier', label: 'Eat Healthier', icon: '💪' },
-  { id: 'develop-skills', label: 'Develop cooking skills', icon: '🧑‍🍳' },
-  { id: 'other', label: 'Other', icon: '' }
+  { id: "save-money", label: "Save money", icon: "💵" },
+  { id: "eat-healthier", label: "Eat Healthier", icon: "💪" },
+  { id: "develop-skills", label: "Develop cooking skills", icon: "🧑‍🍳" },
+  { id: "other", label: "Other", icon: "" },
 ];
 
 export default function TargetSelection() {
@@ -17,16 +17,14 @@ export default function TargetSelection() {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    navigate('/cuisines');
+    navigate("/cuisines");
   };
 
   return (
     <div className="target-wrapper">
       <div className="target-screen">
         <div className="target-header">
-          <Link to="/age-selection" className="back-circle">
-            <ChevronLeft size={24} color="#fff" />
-          </Link>
+          <BackButton to="/ageselect" />
           <div className="target-brand">
             <img src={senetIcon} alt="Senet" className="target-logo" />
             <span className="target-brand-name">Senet</span>
@@ -42,13 +40,15 @@ export default function TargetSelection() {
 
         <div className="target-list">
           {targetOptions.map((option) => (
-            <div 
+            <div
               key={option.id}
-              className={`target-item ${selectedTarget === option.id ? 'active' : ''}`}
+              className={`target-item ${selectedTarget === option.id ? "active" : ""}`}
               onClick={() => setSelectedTarget(option.id)}
             >
               <div className="radio-outer">
-                {selectedTarget === option.id && <div className="radio-inner" />}
+                {selectedTarget === option.id && (
+                  <div className="radio-inner" />
+                )}
               </div>
               <span className="target-text">
                 {option.label} {option.icon}
@@ -58,9 +58,9 @@ export default function TargetSelection() {
         </div>
 
         <div className="target-footer">
-          <button 
-            type="button" 
-            className="continue-redirect-btn" 
+          <button
+            type="button"
+            className="continue-redirect-btn"
             disabled={!selectedTarget}
             onClick={handleNavigation}
           >

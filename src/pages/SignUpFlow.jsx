@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react';
-import { supabase } from '../supabase';
-import './Signupflow.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { supabase } from "../supabase";
+import BackButton from "../components/BackButton";
+import "./Signupflow.css";
 
-import googleIcon from '../assets/icons/Google Icon.png';
-import appleIcon from '../assets/icons/Apple Icon.png';
-import facebookIcon from '../assets/icons/Facebook Icon.png';
+import googleIcon from "../assets/icons/Google Icon.png";
+import appleIcon from "../assets/icons/Apple Icon.png";
+import facebookIcon from "../assets/icons/Facebook Icon.png";
 
 export default function SignupFlow() {
   const [formData, setFormData] = useState({
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,32 +31,29 @@ export default function SignupFlow() {
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
     try {
-      const { error: supabaseError } = await supabase
-        .from('users')
-        .insert([
-          {
-            username: formData.username,
-            full_name: `${formData.firstName} ${formData.lastName}`.trim(),
-            email: formData.email,
-            password: formData.password
-          }
-        ]);
+      const { error: supabaseError } = await supabase.from("users").insert([
+        {
+          username: formData.username,
+          full_name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          password: formData.password,
+        },
+      ]);
 
       if (supabaseError) throw supabaseError;
 
-      alert('Account created successfully!');
-      navigate('/ageselect');
+      navigate("/ageselect");
     } catch (err) {
-      setError(err.message || 'An error occurred during sign up.');
+      setError(err.message || "An error occurred during sign up.");
     } finally {
       setLoading(false);
     }
@@ -65,9 +63,7 @@ export default function SignupFlow() {
     <div className="signup-flow-wrapper">
       <div className="signup-flow-screen">
         <div className="signup-flow-header">
-          <Link to="/" className="back-button">
-            <ChevronLeft size={28} color="#fff" />
-          </Link>
+          <BackButton to="/signup" />
           <h1 className="signup-flow-title">Create Account</h1>
         </div>
 
@@ -76,7 +72,12 @@ export default function SignupFlow() {
             <label>Username</label>
             <div className="signup-input-field">
               <User size={20} className="signup-icon" />
-              <input name="username" placeholder="Username" onChange={handleChange} required />
+              <input
+                name="username"
+                placeholder="Username"
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
@@ -84,13 +85,23 @@ export default function SignupFlow() {
             <div className="signup-input-group">
               <label>First Name</label>
               <div className="signup-input-field">
-                <input name="firstName" placeholder="First Name" onChange={handleChange} required />
+                <input
+                  name="firstName"
+                  placeholder="First Name"
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
             <div className="signup-input-group">
               <label>Last Name</label>
               <div className="signup-input-field">
-                <input name="lastName" placeholder="Last Name" onChange={handleChange} required />
+                <input
+                  name="lastName"
+                  placeholder="Last Name"
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
           </div>
@@ -99,7 +110,13 @@ export default function SignupFlow() {
             <label>Email Address</label>
             <div className="signup-input-field">
               <Mail size={20} className="signup-icon" />
-              <input type="email" name="email" placeholder="Enter Email Address" onChange={handleChange} required />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Email Address"
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
@@ -107,14 +124,18 @@ export default function SignupFlow() {
             <label>Password</label>
             <div className="signup-input-field">
               <Lock size={20} className="signup-icon" />
-              <input 
+              <input
                 name="password"
-                type={showPassword ? "text" : "password"} 
-                placeholder="Enter Password" 
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
                 onChange={handleChange}
-                required 
+                required
               />
-              <button type="button" className="signup-eye" onClick={() => setShowPassword(!showPassword)}>
+              <button
+                type="button"
+                className="signup-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
@@ -124,18 +145,22 @@ export default function SignupFlow() {
             <label>Repeat Password</label>
             <div className="signup-input-field">
               <Lock size={20} className="signup-icon" />
-              <input 
+              <input
                 name="confirmPassword"
-                type={showPassword ? "text" : "password"} 
-                placeholder="Repeat Password" 
+                type={showPassword ? "text" : "password"}
+                placeholder="Repeat Password"
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
             {error && <p className="signup-error-msg">{error}</p>}
           </div>
 
-          <button type="submit" className="signup-submit-btn" disabled={loading}>
+          <button
+            type="submit"
+            className="signup-submit-btn"
+            disabled={loading}
+          >
             {loading ? "Creating..." : "Continue"}
           </button>
         </form>
@@ -153,9 +178,15 @@ export default function SignupFlow() {
           </div>
 
           <div className="signup-socials">
-            <button className="signup-social-btn"><img src={googleIcon} alt="G" /></button>
-            <button className="signup-social-btn"><img src={appleIcon} alt="A" /></button>
-            <button className="signup-social-btn"><img src={facebookIcon} alt="F" /></button>
+            <button className="signup-social-btn">
+              <img src={googleIcon} alt="G" />
+            </button>
+            <button className="signup-social-btn">
+              <img src={appleIcon} alt="A" />
+            </button>
+            <button className="signup-social-btn">
+              <img src={facebookIcon} alt="F" />
+            </button>
           </div>
 
           <p className="login-redirect">

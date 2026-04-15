@@ -19,7 +19,7 @@ const Routing = () => {
         <Route path='/ageselect' element={<AgeSelect/>}/>
         <Route path='/target' element={<TargetSelect/>}/>
         <Route path='/cuisines' element={<CuisineSelect/>}/>
-        <Route path='/home' element={<Home/>}/>
+        <Route path='/feed' element={<Home/>}/>
         
     
 
