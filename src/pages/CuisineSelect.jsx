@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../components/BackButton";
+import { Link } from "react-router-dom";
 import CuisineCard from "../components/CuisineCard";
 import "./CuisineSelect.css";
 
@@ -41,10 +42,6 @@ export default function CuisineSelection() {
     );
   };
 
-  const handleNext = () => {
-    navigate("/allergy-filters");
-  };
-
   return (
     <div className="cuisine-wrapper">
       <div className="cuisine-screen">
@@ -69,16 +66,20 @@ export default function CuisineSelection() {
         </div>
 
         <div className="cuisine-footer">
-          <button
-            className="set-allergy-btn"
-            onClick={handleNext}
-            disabled={selectedCuisines.length < 5}
-          >
-            Set Allergy Filters
-          </button>
-          <button className="no-restrictions-btn" onClick={handleNext}>
-            No restrictions, skip
-          </button>
+          <Link to="/allergy">
+            <button
+              className="set-allergy-btn"
+              disabled={selectedCuisines.length < 5}
+            >
+              Set Allergy Filters
+            </button>
+          </Link>
+
+          <Link to="/">
+            <button className="no-restrictions-btn">
+              No restrictions, skip
+            </button>
+          </Link>
         </div>
       </div>
     </div>
