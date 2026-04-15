@@ -1,0 +1,19 @@
+.custom-back-circle {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.custom-back-circle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.custom-back-circle:active {
+  transform: scale(0.95);
+}
