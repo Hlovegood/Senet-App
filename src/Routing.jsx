@@ -6,7 +6,8 @@ import SigninFlow from './pages/SigninFlow';
 import SignUp from './pages/SignUp';
 import Signupflow from './pages/SignUpFlow';
 import AgeSelect from './pages/AgeSelect';
-import TargetSelect from './pages/TargetSelect'
+import TargetSelect from './pages/TargetSelect';
+import CuisineSelect from './pages/CuisineSelect';
 const Routing = () => {
     return ( <>
     <BrowserRouter>
@@ -17,6 +18,7 @@ const Routing = () => {
         <Route path='/signupflow' element={<Signupflow/>}/>
         <Route path='/ageselect' element={<AgeSelect/>}/>
         <Route path='/target' element={<TargetSelect/>}/>
+        <Route path='/cuisines' element={<CuisineSelect/>}/>
         <Route path='/home' element={<Home/>}/>
         
     

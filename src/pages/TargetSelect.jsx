@@ -17,7 +17,7 @@ export default function TargetSelection() {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    navigate('/cuisineselect');
+    navigate('/cuisines');
   };
 
   return (

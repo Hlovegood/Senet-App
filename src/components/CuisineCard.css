@@ -1,0 +1,31 @@
+.cuisine-card-holder {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden; /* Keeps the square flag inside the circle */
+}
+
+.cuisine-card-holder.selected {
+  background: rgba(240, 102, 12, 0.3); /* Faint orange selection */
+  border-color: #f0660c;
+  transform: scale(1.05);
+}
+
+.cuisine-flag-img {
+  width: 45px; /* Size of flag inside the circle */
+  height: auto;
+  object-fit: contain;
+  /* Some flags have white borders, this makes them pop on dark bg */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); 
+}
+
+.cuisine-card-holder:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
