@@ -32,7 +32,7 @@ export default function AgeSelection() {
             <img src={senetIcon} alt="Senet" className="age-logo" />
             <span className="age-brand-name">Senet</span>
           </div>
-          <Link to="/cuisineselect" className="skip-link-btn">
+          <Link to="/target" className="skip-link-btn">
             Skip
           </Link>
         </div>
