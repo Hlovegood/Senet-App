@@ -72,7 +72,7 @@ export default function CuisineSelection() {
             </button>
           </Link>
 
-          <Link to="/feed">
+          <Link to="/finish">
             <button className="no-restrictions-btn">
               No restrictions, skip
             </button>

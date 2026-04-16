@@ -27,7 +27,7 @@ export default function AllergySelect() {
       <div className="allergy-screen">
         <div className="allergy-header">
           <BackButton to="/cuisines" />
-          <Link to="/feed" className="skip-link-btn">
+          <Link to="/finish" className="skip-link-btn">
             Skip
           </Link>
         </div>
@@ -71,7 +71,7 @@ export default function AllergySelect() {
 
         <div className="allergy-footer">
           <Link 
-            to="/feed" 
+            to="/finish" 
             className={`continue-submit-link ${(hasNoAllergies || selectedAllergy) ? '' : 'disabled'}`}
           >
             Continue

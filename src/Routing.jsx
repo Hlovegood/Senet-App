@@ -9,7 +9,8 @@ import AgeSelect from './pages/AgeSelect';
 import TargetSelect from './pages/TargetSelect';
 import CuisineSelect from './pages/CuisineSelect';
 import Allergy from './pages/AllergySelect';
-
+import Finish from './pages/FinishSignUp'
+;
 const Routing = () => {
     return ( <>
     <BrowserRouter>
@@ -22,6 +23,7 @@ const Routing = () => {
         <Route path='/target' element={<TargetSelect/>}/>
         <Route path='/cuisines' element={<CuisineSelect/>}/>
         <Route path='/allergy' element={<Allergy/>}/>
+        <Route path='/finish' element={<Finish/>}/>
         <Route path='/feed' element={<Home/>}/>
         
     
