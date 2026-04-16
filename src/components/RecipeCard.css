@@ -1,22 +1,21 @@
 .recipe-card {
-  width: 100%; /* Fixed width determined by the grid container */
+  width: 100%;
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  margin-bottom: 15px; /* Spacing for masonry feel */
+  margin-bottom: 15px; 
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.recipe-card:hover {
-  transform: scale(1.02);
-}
+
 
 .recipe-card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  filter: brightness(60%);
 }
 
 .recipe-card-overlay {

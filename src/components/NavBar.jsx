@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, User, ShoppingCart, Search } from 'lucide-react';
-import './Navbar.css';
+import './NavBar.css';
 
 const navItems = [
-  { path: '/home', icon: Home, index: 0 },
+  { path: '/feed', icon: Home, index: 0 },
   { path: '/profile', icon: User, index: 1 },
   { path: '/cart', icon: ShoppingCart, index: 2 },
   { path: '/search', icon: Search, index: 3 }
@@ -12,15 +12,16 @@ const navItems = [
 
 export default function Navbar() {
   const location = useLocation();
-  const [activeIndex, setActiveIndex] = useState(() => {
-    const current = navItems.find(item => location.pathname.includes(item.path));
-    return current ? current.index : 0;
-  });
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const handleTabClick = (index) => {
+  useEffect(() => {
+    const current = navItems.find(item => location.pathname.includes(item.path));
+    const index = current ? current.index : 0;
     setActiveIndex(index);
     document.documentElement.style.setProperty('--active-index', index);
-  };
+  }, [location]);
+
+  const ActiveIcon = navItems[activeIndex].icon;
 
   return (
     <div className="nav-container">
@@ -35,10 +36,9 @@ export default function Navbar() {
                 key={index}
                 to={item.path}
                 className={`nav-link ${isActive ? 'active' : ''}`}
-                onClick={() => handleTabClick(index)}
               >
                 <div className="icon-wrapper">
-                  <Icon size={26} strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon size={24} strokeWidth={2} />
                 </div>
               </Link>
             );
@@ -46,7 +46,9 @@ export default function Navbar() {
         </div>
         
         <div className="nav-indicator">
-          <div className="orange-bubble"></div>
+          <div className="orange-bubble">
+            <ActiveIcon size={24} color="#fff" strokeWidth={2.5} />
+          </div>
         </div>
       </div>
     </div>
