@@ -48,3 +48,17 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.recipe-card-wrapper {
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 15px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.recipe-card-wrapper:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}

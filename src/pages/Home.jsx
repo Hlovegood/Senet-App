@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../supabase';
 import RecipeCard from '../components/RecipeCard';
 import Navbar from '../components/NavBar';
@@ -14,7 +15,6 @@ export default function Feed() {
         const { data: recipeData, error: recipeError } = await supabase
           .from('recipes')
           .select('id, title_en, recipe_img');
-
 
         if (recipeError) throw recipeError;
 
@@ -50,13 +50,18 @@ export default function Feed() {
         ) : (
           <div className="bento-grid">
             {recipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                name={recipe.title_en}
-                imageUrl={recipe.recipe_img}
-                cookTime={recipe.cookTime}
-                height={recipe.displayHeight}
-              />
+              <Link 
+                to={`/recipe-details/${recipe.id}`} 
+                key={recipe.id} 
+                className="recipe-card-wrapper"
+              >
+                <RecipeCard
+                  name={recipe.title_en}
+                  imageUrl={recipe.recipe_img}
+                  cookTime={recipe.cookTime}
+                  height={recipe.displayHeight}
+                />
+              </Link>
             ))}
           </div>
         )}
