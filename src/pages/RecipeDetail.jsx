@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, Timer } from 'lucide-react';
+import { Heart} from 'lucide-react';
 import { supabase } from '../supabase';
 import BackButton from '../components/BackButton';
 import Preloader from '../components/PreLoader';
@@ -46,7 +46,7 @@ export default function RecipeDetail() {
         const { data: similarData } = await supabase
           .from('recipes')
           .select('id, title_en, recipe_img')
-          .eq('cuisines_id', mainRecipe.cuisines_id)
+          .eq('cuisine_id', mainRecipe.cuisine_id)
           .neq('id', recipeId)
           .limit(4);
         setSimilarRecipes(similarData || []);
