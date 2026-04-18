@@ -14,6 +14,7 @@ import Details from './pages/RecipeDetail';
 import Profile from './pages/Profile';
 import CuisineEdit from './pages/CuisineEdit';
 import ProfileEdit from './pages/ProfileEdit';
+import Search from './pages/Search';
 
 const Routing = () => {
     return ( <>
@@ -32,6 +33,7 @@ const Routing = () => {
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/cuisines-edit' element={<CuisineEdit/>}/>
         <Route path='/profile-edit' element={<ProfileEdit/>}/>
+        <Route path='/search' element={<Search/>}/>
         <Route path='/feed' element={<Home/>}/>
         
     
