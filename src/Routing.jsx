@@ -11,7 +11,8 @@ import CuisineSelect from './pages/CuisineSelect';
 import Allergy from './pages/AllergySelect';
 import Finish from './pages/FinishSignUp';
 import Details from './pages/RecipeDetail';
-import Profile from './pages/Profile'
+import Profile from './pages/Profile';
+import CuisineEdit from './pages/CuisineEdit';
 ;
 const Routing = () => {
     return ( <>
@@ -28,6 +29,7 @@ const Routing = () => {
         <Route path='/finish' element={<Finish/>}/>
         <Route path='/recipe-details/:recipeId' element={<Details/>}/>
         <Route path='/profile' element={<Profile/>}/>
+        <Route path='/cuisines-edit' element={<CuisineEdit/>}/>
         <Route path='/feed' element={<Home/>}/>
         
     

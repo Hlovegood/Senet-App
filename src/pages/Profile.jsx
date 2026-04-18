@@ -61,7 +61,7 @@ export default function Profile() {
     fetchProfileData();
   }, []);
 
-  if (loading) return <Preloader />;
+
 
   return (
     <div className="profile-page">
