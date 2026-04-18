@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { SquarePen, Mail, Lock, HeartCrack, X } from "lucide-react";
+import { SquarePen, HeartCrack, X } from "lucide-react";
 import { supabase } from "../supabase";
 import BackButton from "../components/BackButton";
 import Preloader from "../components/PreLoader";

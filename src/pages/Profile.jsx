@@ -70,33 +70,7 @@ export default function Profile() {
       </header>
 
       <main className="profile-content">
-        <section className="profile-section">
-          <div className="section-title-row">
-            <h2 className="section-title">Favorites</h2>
-            <Link to="/favorites-all" className="see-more-btn">
-              <ChevronRight size={24} color="#f0660c" />
-            </Link>
-          </div>
-          <div className="favorites-bento-grid">
-            {favorites.length > 0 ? (
-              favorites.map((recipe, index) => (
-                <Link
-                  to={`/recipe-details/${recipe.id}`}
-                  key={recipe.id}
-                  className={`bento-item item-${index}`}
-                >
-                  <RecipeCard
-                    name={recipe.title_en}
-                    imageUrl={recipe.recipe_img}
-                    height="100%"
-                  />
-                </Link>
-              ))
-            ) : (
-              <p className="empty-text">No favorites yet.</p>
-            )}
-          </div>
-        </section>
+       
 
         <section className="profile-section">
           <div className="section-title-row">
@@ -121,6 +95,35 @@ export default function Profile() {
               ))
             ) : (
               <p className="empty-text">No cuisines selected.</p>
+            )}
+          </div>
+        </section>
+
+
+         <section className="profile-section">
+          <div className="section-title-row">
+            <h2 className="section-title">Favorites</h2>
+            <Link to="/favorites-all" className="see-more-btn">
+              <ChevronRight size={24} color="#f0660c" />
+            </Link>
+          </div>
+          <div className="favorites-bento-grid">
+            {favorites.length > 0 ? (
+              favorites.map((recipe, index) => (
+                <Link
+                  to={`/recipe-details/${recipe.id}`}
+                  key={recipe.id}
+                  className={`bento-item item-${index}`}
+                >
+                  <RecipeCard
+                    name={recipe.title_en}
+                    imageUrl={recipe.recipe_img}
+                    height="100%"
+                  />
+                </Link>
+              ))
+            ) : (
+              <p className="empty-text">No favorites yet.</p>
             )}
           </div>
         </section>
