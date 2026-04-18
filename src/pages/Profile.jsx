@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronRight, SquarePen } from 'lucide-react';
-import { supabase } from '../supabase';
-import RecipeCard from '../components/RecipeCard';
-import CuisineCard from '../components/CuisineCard';
-import Navbar from '../components/NavBar';
-import Preloader from '../components/PreLoader';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ChevronRight, SquarePen } from "lucide-react";
+import { supabase } from "../supabase";
+import RecipeCard from "../components/RecipeCard";
+import CuisineCard from "../components/CuisineCard";
+import Navbar from "../components/NavBar";
+import "./Profile.css";
 
 export default function Profile() {
   const [favorites, setFavorites] = useState([]);
@@ -17,37 +16,38 @@ export default function Profile() {
     const fetchProfileData = async () => {
       try {
         const userId = localStorage.getItem("pendingUserId");
-        
-        if (!userId) {
-          setLoading(false);
-          return;
-        }
 
         const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('favorite_cuisines, favorite_recipes')
-          .eq('id', userId)
+          .from("users")
+          .select("favorite_cuisines, favorite_recipes")
+          .eq("id", userId)
           .single();
 
         if (userError) throw userError;
 
-        if (userData?.favorite_recipes && userData.favorite_recipes.length > 0) {
+        if (
+          userData?.favorite_recipes &&
+          userData.favorite_recipes.length > 0
+        ) {
           const { data: favRecipes, error: favError } = await supabase
-            .from('recipes')
-            .select('id, title_en, recipe_img')
-            .in('id', userData.favorite_recipes)
+            .from("recipes")
+            .select("id, title_en, recipe_img")
+            .in("id", userData.favorite_recipes)
             .limit(4);
-          
+
           if (favError) throw favError;
           setFavorites(favRecipes || []);
         }
 
-        if (userData?.favorite_cuisines && userData.favorite_cuisines.length > 0) {
+        if (
+          userData?.favorite_cuisines &&
+          userData.favorite_cuisines.length > 0
+        ) {
           const { data: cuisineDetails, error: cError } = await supabase
-            .from('cuisines')
-            .select('id, country_en, flag_url')
-            .in('id', userData.favorite_cuisines);
-          
+            .from("cuisines")
+            .select("id, country_en, flag_url")
+            .in("id", userData.favorite_cuisines);
+
           if (cError) throw cError;
           setActiveCuisines(cuisineDetails || []);
         }
@@ -60,8 +60,6 @@ export default function Profile() {
 
     fetchProfileData();
   }, []);
-
-
 
   return (
     <div className="profile-page">
@@ -82,11 +80,21 @@ export default function Profile() {
           <div className="favorites-bento-grid">
             {favorites.length > 0 ? (
               favorites.map((recipe, index) => (
-                <Link to={`/recipe-details/${recipe.id}`} key={recipe.id} className={`bento-item item-${index}`}>
-                  <RecipeCard name={recipe.title_en} imageUrl={recipe.recipe_img} height="100%" />
+                <Link
+                  to={`/recipe-details/${recipe.id}`}
+                  key={recipe.id}
+                  className={`bento-item item-${index}`}
+                >
+                  <RecipeCard
+                    name={recipe.title_en}
+                    imageUrl={recipe.recipe_img}
+                    height="100%"
+                  />
                 </Link>
               ))
-            ) : <p className="empty-text">No favorites yet.</p>}
+            ) : (
+              <p className="empty-text">No favorites yet.</p>
+            )}
           </div>
         </section>
 
@@ -97,18 +105,23 @@ export default function Profile() {
               <SquarePen size={20} color="#f0660c" />
             </Link>
           </div>
-          
-          <div className="cuisines-horizontal-list" style={{ display: 'flex', gap: '10px', overflowX: 'auto',}}>
+
+          <div
+            className="cuisines-horizontal-list"
+            style={{ display: "flex", gap: "10px", overflowX: "auto" }}
+          >
             {activeCuisines.length > 0 ? (
               activeCuisines.map((item) => (
                 <CuisineCard
                   key={item.id}
                   flagUrl={item.flag_url}
                   isSelected={true}
-                  onClick={() => {}} 
+                  onClick={() => {}}
                 />
               ))
-            ) : <p className="empty-text">No cuisines selected.</p>}
+            ) : (
+              <p className="empty-text">No cuisines selected.</p>
+            )}
           </div>
         </section>
       </main>
