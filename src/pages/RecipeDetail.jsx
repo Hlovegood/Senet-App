@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart} from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { supabase } from '../supabase';
 import BackButton from '../components/BackButton';
 import Preloader from '../components/PreLoader';
@@ -14,6 +14,7 @@ export default function RecipeDetail() {
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [isFavorited, setIsFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
+  const userId = localStorage.getItem("pendingUserId");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,12 +52,17 @@ export default function RecipeDetail() {
           .limit(4);
         setSimilarRecipes(similarData || []);
 
-        const { data: favData } = await supabase
-          .from('favorites')
-          .select('id')
-          .eq('recipe_id', recipeId)
-          .single();
-        if (favData) setIsFavorited(true);
+        if (userId) {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('favorite_recipes')
+            .eq('id', userId)
+            .single();
+          
+          if (userData?.favorite_recipes?.includes(recipeId)) {
+            setIsFavorited(true);
+          }
+        }
 
       } catch (err) {
         console.error(err.message);
@@ -68,20 +74,48 @@ export default function RecipeDetail() {
     };
 
     fetchRecipeData();
-  }, [recipeId]);
+  }, [recipeId, userId]);
 
   const toggleFavorite = async () => {
+    if (!userId) return;
+
     const previousState = isFavorited;
     setIsFavorited(!previousState);
 
-    if (!previousState) {
-      await supabase.from('favorites').insert([{ recipe_id: recipeId }]);
-    } else {
-      await supabase.from('favorites').delete().eq('recipe_id', recipeId);
+    try {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('favorite_recipes')
+        .eq('id', userId)
+        .single();
+
+      let currentFavorites = userData?.favorite_recipes || [];
+      let updatedFavorites;
+
+      if (!previousState) {
+        if (!currentFavorites.includes(recipeId)) {
+          updatedFavorites = [...currentFavorites, recipeId];
+        } else {
+          updatedFavorites = currentFavorites;
+        }
+      } else {
+        updatedFavorites = currentFavorites.filter(id => id !== recipeId);
+      }
+
+      const { error } = await supabase
+        .from('users')
+        .update({ favorite_recipes: updatedFavorites })
+        .eq('id', userId);
+
+      if (error) throw error;
+    } catch (err) {
+      console.error("Error updating favorites:", err.message);
+      setIsFavorited(previousState);
     }
   };
 
   if (loading) return <Preloader />;
+  if (!recipe) return <div className="error-text">Recipe not found.</div>;
 
   return (
     <div className="recipe-detail-page">
@@ -116,7 +150,7 @@ export default function RecipeDetail() {
               <div key={i} className="ingred-row">
                 <span className="ingred-name">{item.item_name_en}</span>
                 <span className="ingred-amount">
-                  {item.quantity} <span className="unit-text">{item.unit}</span>
+                  {item.quantity} <span className="unit-text">{item.unit_en}</span>
                 </span>
               </div>
             ))}

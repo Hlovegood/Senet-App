@@ -40,18 +40,26 @@ export default function SignupFlow() {
     }
 
     try {
-      const { error: supabaseError } = await supabase.from("users").insert([
-        {
-          username: formData.username,
-          full_name: `${formData.firstName} ${formData.lastName}`.trim(),
-          email: formData.email,
-          password: formData.password,
-        },
-      ]);
+      const { data, error: supabaseError } = await supabase
+        .from("users")
+        .insert([
+          {
+            username: formData.username,
+            full_name: `${formData.firstName} ${formData.lastName}`.trim(),
+            email: formData.email,
+            password: formData.password,
+          },
+        ])
+        .select();
 
       if (supabaseError) throw supabaseError;
 
-      navigate("/ageselect");
+      if (data && data.length > 0) {
+        localStorage.setItem("pendingUserId", data[0].id);
+        navigate("/ageselect");
+      } else {
+        throw new Error("Failed to retrieve user ID after creation.");
+      }
     } catch (err) {
       setError(err.message || "An error occurred during sign up.");
     } finally {

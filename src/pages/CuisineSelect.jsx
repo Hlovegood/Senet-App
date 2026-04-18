@@ -1,42 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabase";
 import BackButton from "../components/BackButton";
-import { Link } from "react-router-dom";
 import CuisineCard from "../components/CuisineCard";
 import "./CuisineSelect.css";
 
-const cuisines = [
-  { id: "italy", code: "it" },
-  { id: "greece", code: "gr" },
-  { id: "spain", code: "es" },
-  { id: "portugal", code: "pt" },
-  { id: "japan", code: "jp" },
-  { id: "turkey", code: "tr" },
-  { id: "china", code: "cn" },
-  { id: "indonesia", code: "id" },
-  { id: "india", code: "in" },
-  { id: "usa", code: "us" },
-  { id: "vietnam", code: "vn" },
-  { id: "brazil", code: "br" },
-  { id: "croatia", code: "hr" },
-  { id: "poland", code: "pl" },
-  { id: "lebanon", code: "lb" },
-  { id: "korea", code: "kr" },
-  { id: "colombia", code: "co" },
-  { id: "palestine", code: "ps" },
-  { id: "egypt", code: "eg" },
-  { id: "germany", code: "de" },
-  { id: "russia", code: "ru" },
-  { id: "morocco", code: "ma" },
-  { id: "france", code: "fr" },
-  { id: "mexico", code: "mx" },
-];
-
 export default function CuisineSelection() {
+  const [dbCuisines, setDbCuisines] = useState([]);
   const [selectedCuisines, setSelectedCuisines] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("pendingUserId");
+
+  useEffect(() => {
+    if (!userId) {
+      alert("Signup session not found. Please start from the beginning.");
+      navigate("/signup");
+      return;
+    }
+
+    const fetchCuisines = async () => {
+      const { data, error } = await supabase
+        .from("cuisines")
+        .select("id, country_en, flag_url");
+
+      if (error) {
+        console.error(error.message);
+      } else {
+        setDbCuisines(data);
+      }
+    };
+
+    fetchCuisines();
+  }, [userId, navigate]);
+
   const toggleCuisine = (id) => {
     setSelectedCuisines((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  const handleSaveCuisines = async () => {
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({ favorite_cuisines: selectedCuisines })
+        .eq("id", userId);
+
+      if (error) throw error;
+
+      alert("Cuisines confirmed!");
+      navigate("/allergy");
+    } catch (err) {
+      console.error(err.message);
+      alert("Error: " + err.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -52,10 +73,10 @@ export default function CuisineSelection() {
         </div>
 
         <div className="cuisine-grid">
-          {cuisines.map((cuisine) => (
+          {dbCuisines.map((cuisine) => (
             <CuisineCard
               key={cuisine.id}
-              flagUrl={`https://flagcdn.com/w160/${cuisine.code}.png`}
+              flagUrl={cuisine.flag_url}
               isSelected={selectedCuisines.includes(cuisine.id)}
               onClick={() => toggleCuisine(cuisine.id)}
             />
@@ -63,20 +84,29 @@ export default function CuisineSelection() {
         </div>
 
         <div className="cuisine-footer">
-          <Link to="/allergy">
-            <button
-              className="set-allergy-btn"
-              disabled={selectedCuisines.length < 5}
-            >
-              Set Allergy Filters
-            </button>
-          </Link>
+          <button
+            className="save-cuisines-primary-btn"
+            disabled={selectedCuisines.length < 5 || isSaving}
+            onClick={handleSaveCuisines}
+          >
+            {isSaving ? "Saving..." : "Confirm Selections"}
+          </button>
 
-          <Link to="/finish">
-            <button className="no-restrictions-btn">
-              No restrictions, skip
+          <div className="cuisine-options-row">
+            <button
+              className="set-allergy-btn-small"
+              onClick={() => navigate("/allergy")}
+            >
+              Set Allergies
             </button>
-          </Link>
+
+            <button
+              className="no-restrictions-btn-small"
+              onClick={() => navigate("/finish")}
+            >
+              Skip
+            </button>
+          </div>
         </div>
       </div>
     </div>
