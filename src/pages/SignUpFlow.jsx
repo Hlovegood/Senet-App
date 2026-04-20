@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, Check, X } from "lucide-react";
 import { supabase } from "../supabase";
 import BackButton from "../components/BackButton";
 import "./Signupflow.css";
@@ -22,16 +22,41 @@ export default function SignupFlow() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [passwordValidations, setPasswordValidations] = useState({
+    length: false,
+    number: false,
+    special: false,
+  });
+  
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const { password } = formData;
+    setPasswordValidations({
+      length: password.length >= 8,
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*]/.test(password),
+    });
+  }, [formData.password]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const isPasswordSecure = () => {
+    return Object.values(passwordValidations).every(Boolean);
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    if (!isPasswordSecure()) {
+      setError("Please meet all password requirements.");
+      setLoading(false);
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
@@ -147,6 +172,21 @@ export default function SignupFlow() {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+            
+            <div className="password-checklist">
+              <div className={`check-item ${passwordValidations.length ? 'valid' : 'invalid'}`}>
+                {passwordValidations.length ? <Check size={14} /> : <X size={14} />}
+                At least 8 characters
+              </div>
+              <div className={`check-item ${passwordValidations.number ? 'valid' : 'invalid'}`}>
+                {passwordValidations.number ? <Check size={14} /> : <X size={14} />}
+                Contains a number
+              </div>
+              <div className={`check-item ${passwordValidations.special ? 'valid' : 'invalid'}`}>
+                {passwordValidations.special ? <Check size={14} /> : <X size={14} />}
+                Special character (!@#$%)
+              </div>
+            </div>
           </div>
 
           <div className="signup-input-group">
@@ -167,34 +207,17 @@ export default function SignupFlow() {
           <button
             type="submit"
             className="signup-submit-btn"
-            disabled={loading}
+            disabled={loading || !isPasswordSecure()}
           >
             {loading ? "Creating..." : "Continue"}
           </button>
         </form>
 
         <div className="signup-flow-footer">
-          <p className="signup-terms">
-            By continuing, you agree to the <br />
-            <strong>Terms of Services & Privacy Policy</strong>
-          </p>
-
-          <div className="signup-divider">
-            <span className="signup-line"></span>
-            <span className="signup-or">Or</span>
-            <span className="signup-line"></span>
-          </div>
-
           <div className="signup-socials">
-            <button className="signup-social-btn">
-              <img src={googleIcon} alt="G" />
-            </button>
-            <button className="signup-social-btn">
-              <img src={appleIcon} alt="A" />
-            </button>
-            <button className="signup-social-btn">
-              <img src={facebookIcon} alt="F" />
-            </button>
+            <button className="signup-social-btn"><img src={googleIcon} alt="G" /></button>
+            <button className="signup-social-btn"><img src={appleIcon} alt="A" /></button>
+            <button className="signup-social-btn"><img src={facebookIcon} alt="F" /></button>
           </div>
 
           <p className="login-redirect">

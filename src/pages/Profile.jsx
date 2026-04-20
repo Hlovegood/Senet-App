@@ -15,10 +15,8 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // 1. Prioritize the ID saved in LocalStorage from the SigninFlow
         let userId = localStorage.getItem("pendingUserId");
 
-        // 2. Fallback to Supabase Auth if LocalStorage is empty
         if (!userId) {
           const {
             data: { user },
@@ -31,7 +29,6 @@ export default function Profile() {
           return;
         }
 
-        // 3. Fetch user-specific preferences
         const { data: userData, error: userError } = await supabase
           .from("users")
           .select("favorite_cuisines, favorite_recipes")
@@ -40,7 +37,6 @@ export default function Profile() {
 
         if (userError) throw userError;
 
-        // 4. Fetch Favorite Recipes
         if (userData?.favorite_recipes?.length > 0) {
           const { data: favRecipes, error: favError } = await supabase
             .from("recipes")
@@ -54,7 +50,6 @@ export default function Profile() {
           setFavorites([]);
         }
 
-        // 5. Fetch Favorite Cuisines
         if (userData?.favorite_cuisines?.length > 0) {
           const { data: cuisineDetails, error: cError } = await supabase
             .from("cuisines")
