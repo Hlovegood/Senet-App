@@ -26,7 +26,7 @@ export default function SigninFlow() {
     try {
       const { data, error } = await supabase
         .from("users")
-        .select("*")
+        .select("id")
         .eq("email", email)
         .eq("password", password)
         .single();
@@ -34,6 +34,9 @@ export default function SigninFlow() {
       if (error || !data) {
         setErrorMessage("Invalid email or password. Please try again.");
       } else {
+        localStorage.setItem("pendingUserId", data.id);
+        localStorage.setItem("userId", data.id);
+
         navigate("/feed");
       }
     } catch (err) {

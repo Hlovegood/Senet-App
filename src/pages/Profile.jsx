@@ -15,8 +15,23 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const userId = localStorage.getItem("pendingUserId");
+        // 1. Prioritize the ID saved in LocalStorage from the SigninFlow
+        let userId = localStorage.getItem("pendingUserId");
 
+        // 2. Fallback to Supabase Auth if LocalStorage is empty
+        if (!userId) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          userId = user?.id;
+        }
+
+        if (!userId) {
+          console.error("No User ID found. Please sign in.");
+          return;
+        }
+
+        // 3. Fetch user-specific preferences
         const { data: userData, error: userError } = await supabase
           .from("users")
           .select("favorite_cuisines, favorite_recipes")
@@ -25,10 +40,8 @@ export default function Profile() {
 
         if (userError) throw userError;
 
-        if (
-          userData?.favorite_recipes &&
-          userData.favorite_recipes.length > 0
-        ) {
+        // 4. Fetch Favorite Recipes
+        if (userData?.favorite_recipes?.length > 0) {
           const { data: favRecipes, error: favError } = await supabase
             .from("recipes")
             .select("id, title_en, recipe_img")
@@ -37,12 +50,12 @@ export default function Profile() {
 
           if (favError) throw favError;
           setFavorites(favRecipes || []);
+        } else {
+          setFavorites([]);
         }
 
-        if (
-          userData?.favorite_cuisines &&
-          userData.favorite_cuisines.length > 0
-        ) {
+        // 5. Fetch Favorite Cuisines
+        if (userData?.favorite_cuisines?.length > 0) {
           const { data: cuisineDetails, error: cError } = await supabase
             .from("cuisines")
             .select("id, country_en, flag_url")
@@ -50,9 +63,11 @@ export default function Profile() {
 
           if (cError) throw cError;
           setActiveCuisines(cuisineDetails || []);
+        } else {
+          setActiveCuisines([]);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Profile Fetch Error:", err);
       } finally {
         setTimeout(() => setLoading(false), 800);
       }
@@ -60,6 +75,15 @@ export default function Profile() {
 
     fetchProfileData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="profile-page loading-state">
+        <div className="loader"></div>
+        <Navbar />
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page">
@@ -71,8 +95,6 @@ export default function Profile() {
       </header>
 
       <main className="profile-content">
-       
-
         <section className="profile-section">
           <div className="section-title-row">
             <h2 className="section-title">Active Cuisines</h2>
@@ -100,8 +122,7 @@ export default function Profile() {
           </div>
         </section>
 
-
-         <section className="profile-section">
+        <section className="profile-section">
           <div className="section-title-row">
             <h2 className="section-title">Favorites</h2>
             <Link to="/favorites-all" className="see-more-btn">
