@@ -66,6 +66,7 @@ export default function Profile() {
       <header className="profile-header">
         <Link to="/profile-edit" className="edit-profile-link">
           <SquarePen size={24} color="#f0660c" />
+          <p>Edit Profile</p>
         </Link>
       </header>
 
