@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "./static/css/main.0b08df4c.css",
+    "main.js": "./static/js/main.a51fe1de.js",
+    "static/media/Carousel-img (12).png": "./static/media/Carousel-img (12).581b1e1a0b2989115351.png",
+    "static/media/Carousel-img (6).png": "./static/media/Carousel-img (6).c890dfa570e2d798e73c.png",
+    "static/media/Carousel-img (13).png": "./static/media/Carousel-img (13).4e2dceca508efff28ae6.png",
+    "static/media/Carousel-img (10).png": "./static/media/Carousel-img (10).6c9efe00b8f2c281acbb.png",
+    "static/media/Carousel-img (4).png": "./static/media/Carousel-img (4).f5009fb54d9feb453be3.png",
+    "static/media/Carousel-img (3).png": "./static/media/Carousel-img (3).917d6ec8e4d0be53b65a.png",
+    "static/media/Carousel-img (2).png": "./static/media/Carousel-img (2).936f0eaafc8277851334.png",
+    "static/media/Poppins-Medium.ttf": "./static/media/Poppins-Medium.673ed42382ab264e0bf5.ttf",
+    "index.html": "./index.html",
+    "main.0b08df4c.css.map": "./static/css/main.0b08df4c.css.map",
+    "main.a51fe1de.js.map": "./static/js/main.a51fe1de.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0b08df4c.css",
+    "static/js/main.a51fe1de.js"
+  ]
+}
