@@ -1,5 +1,4 @@
 import React from 'react';
-// Changed BrowserRouter to HashRouter for stable mobile pathing
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Signin from './pages/Signin';
@@ -18,7 +17,7 @@ import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import FavsAll from './pages/FavoriteAll';
 import Settings from './pages/Settings';
-import './index.css'
+import './index.css';
 
 const Routing = () => {
     return (

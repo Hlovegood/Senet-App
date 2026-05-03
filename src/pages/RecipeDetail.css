@@ -184,3 +184,149 @@
   z-index: 10;
   position: fixed;
 }
+
+.recipe-content-body {
+  position: relative;
+  margin-top: -40px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  padding: 30px 20px;
+  z-index: 2;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.recipe-main-header {
+  margin-bottom: 25px;
+}
+
+.hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.recipe-hero {
+  height: 45vh;
+}
+
+.hero-title-overlay {
+  display: none;
+}
+
+.ingredients-wrap-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.ingredient-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 15px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  flex-grow: 0;
+}
+
+.ingred-emoji {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.ingred-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ingred-name-modern {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.ingred-amount-modern {
+  font-size: 12px;
+  color: #f0660c;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.ingredient-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #f0660c;
+}
+
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sticky-header.visible {
+  transform: translateY(0);
+}
+
+.sticky-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 15px;
+}
+
+.fav-btn-small {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.main-fav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.detail-header-actions {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  z-index: 10;
+}

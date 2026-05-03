@@ -1,4 +1,4 @@
-package com.example.app;
+package com.senet.cookingapp;
 
 import com.getcapacitor.BridgeActivity;
 

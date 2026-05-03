@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, ChevronLeft } from 'lucide-react';
 import { supabase } from '../supabase';
 import BackButton from '../components/BackButton';
 import Preloader from '../components/PreLoader';
+import ARButton from '../components/ARButton';
 import './RecipeDetail.css';
 
 export default function RecipeDetail() {
@@ -14,10 +15,45 @@ export default function RecipeDetail() {
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [isFavorited, setIsFavorited] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
   const userId = localStorage.getItem("pendingUserId");
+
+  const getEmoji = (name) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('salmon')) return '🐟';
+    if (lowerName.includes('spinach')) return '🌿';
+    if (lowerName.includes('oil')) return '💧';
+    if (lowerName.includes('salt')) return '🧂';
+    if (lowerName.includes('pepper')) return '🌶️';
+    if (lowerName.includes('lemon')) return '🍋';
+    if (lowerName.includes('garlic')) return '🧄';
+    if (lowerName.includes('onion')) return '🧅';
+    if (lowerName.includes('butter')) return '🧈';
+    if (lowerName.includes('egg')) return '🥚';
+    if (lowerName.includes('milk')) return '🥛';
+    if (lowerName.includes('flour')) return '🌾';
+    if (lowerName.includes('sugar')) return '🍬';
+    if (lowerName.includes('water')) return '🚰';
+    if (lowerName.includes('cream')) return '🍦';
+    if (lowerName.includes('cheese')) return '🧀';
+    if (lowerName.includes('chicken')) return '🍗';
+    if (lowerName.includes('beef')) return '🥩';
+    if (lowerName.includes('tomato')) return '🍅';
+    return '🥗'; 
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    const handleScroll = () => {
+      if (window.scrollY > 250) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
     
     const fetchRecipeData = async () => {
       setLoading(true);
@@ -74,42 +110,26 @@ export default function RecipeDetail() {
     };
 
     fetchRecipeData();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [recipeId, userId]);
 
   const toggleFavorite = async () => {
     if (!userId) return;
-
     const previousState = isFavorited;
     setIsFavorited(!previousState);
-
     try {
-      const { data: userData } = await supabase
-        .from('users')
-        .select('favorite_recipes')
-        .eq('id', userId)
-        .single();
-
+      const { data: userData } = await supabase.from('users').select('favorite_recipes').eq('id', userId).single();
       let currentFavorites = userData?.favorite_recipes || [];
       let updatedFavorites;
-
       if (!previousState) {
-        if (!currentFavorites.includes(recipeId)) {
-          updatedFavorites = [...currentFavorites, recipeId];
-        } else {
-          updatedFavorites = currentFavorites;
-        }
+        updatedFavorites = !currentFavorites.includes(recipeId) ? [...currentFavorites, recipeId] : currentFavorites;
       } else {
         updatedFavorites = currentFavorites.filter(id => id !== recipeId);
       }
-
-      const { error } = await supabase
-        .from('users')
-        .update({ favorite_recipes: updatedFavorites })
-        .eq('id', userId);
-
+      const { error } = await supabase.from('users').update({ favorite_recipes: updatedFavorites }).eq('id', userId);
       if (error) throw error;
     } catch (err) {
-      console.error("Error updating favorites:", err.message);
+      console.error(err.message);
       setIsFavorited(previousState);
     }
   };
@@ -119,39 +139,51 @@ export default function RecipeDetail() {
 
   return (
     <div className="recipe-detail-page">
+      <div className={`sticky-header ${scrolled ? 'visible' : ''}`}>
+        <BackButton to="/feed" />
+        <h2 className="sticky-title">{recipe.title_en}</h2>
+        <button className={`fav-btn-small ${isFavorited ? 'active' : ''}`} onClick={toggleFavorite}>
+          <Heart size={20} fill={isFavorited ? '#f0660c' : 'none'} color={isFavorited ? '#f0660c' : '#fff'} />
+        </button>
+      </div>
+
       <div className="recipe-hero">
         <img src={recipe.recipe_img} alt={recipe.title_en} className="hero-img" />
-        
         <div className="detail-header-actions">
           <BackButton to="/feed" />
-          <button 
-            className={`detail-fav-btn ${isFavorited ? 'active' : ''}`} 
-            onClick={toggleFavorite}
-          >
-            <Heart 
-              size={26} 
-              color={isFavorited ? '#f0660c' : '#fff'} 
-              fill={isFavorited ? '#f0660c' : 'none'} 
-              strokeWidth={2.5}
-            />
-          </button>
-        </div>
-
-        <div className="hero-title-overlay">
-          <h1 className="hero-title">{recipe.title_en}</h1>
         </div>
       </div>
 
       <div className="recipe-content-body">
+        <header className="recipe-main-header">
+           <div className="title-row">
+             <h1 className="hero-title">{recipe.title_en}</h1>
+             <button 
+                className={`main-fav-btn ${isFavorited ? 'active' : ''}`} 
+                onClick={toggleFavorite}
+              >
+                <Heart 
+                  size={28} 
+                  color={isFavorited ? '#f0660c' : '#fff'} 
+                  fill={isFavorited ? '#f0660c' : 'none'} 
+                  strokeWidth={2.5}
+                />
+              </button>
+           </div>
+        </header>
+
         <section className="detail-section">
           <h2 className="section-header">Ingredients</h2>
-          <div className="ingred-list">
+          <div className="ingredients-wrap-container">
             {ingredients.map((item, i) => (
-              <div key={i} className="ingred-row">
-                <span className="ingred-name">{item.item_name_en}</span>
-                <span className="ingred-amount">
-                  {item.quantity} <span className="unit-text">{item.unit_en}</span>
-                </span>
+              <div key={i} className="ingredient-pill">
+                <span className="ingred-emoji">{getEmoji(item.item_name_en)}</span>
+                <div className="ingred-info">
+                  <span className="ingred-name-modern">{item.item_name_en}</span>
+                  <span className="ingred-amount-modern">
+                    {item.quantity} {item.unit_en}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -185,6 +217,8 @@ export default function RecipeDetail() {
           </div>
         </section>
       </div>
+
+      <ARButton arUrl={"https://mywebar.com/p/Project_0_4j7iv4gfmm"} />
     </div>
   );
 }
