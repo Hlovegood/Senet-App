@@ -17,12 +17,12 @@ import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import FavsAll from './pages/FavoriteAll';
 import Settings from './pages/Settings';
+import AllergyEdit from './pages/AllergyEdit';
 import './index.css';
 
 const Routing = () => {
     return (
         <Router>
-            {/* This div locks the viewport to the device size globally */}
             <div className="page-lockdown-wrapper">
                 <Routes>
                     <Route path='/' element={<Signin/>}/>
@@ -33,6 +33,7 @@ const Routing = () => {
                     <Route path='/target' element={<TargetSelect/>}/>
                     <Route path='/cuisines' element={<CuisineSelect/>}/>
                     <Route path='/allergy' element={<Allergy/>}/>
+                    <Route path='/allergy-edit' element={<AllergyEdit/>}/>
                     <Route path='/finish' element={<Finish/>}/>
                     <Route path='/recipe-details/:recipeId' element={<Details/>}/>
                     <Route path='/profile' element={<Profile/>}/>

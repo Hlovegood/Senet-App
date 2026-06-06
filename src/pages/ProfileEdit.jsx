@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { SquarePen, HeartCrack, X } from "lucide-react";
+import { SquarePen, HeartCrack, X, LogOut } from "lucide-react";
 import { supabase } from "../supabase";
 import BackButton from "../components/BackButton";
 import Preloader from "../components/PreLoader";
@@ -25,7 +25,7 @@ export default function ProfileEdit() {
 
   useEffect(() => {
     if (!userId) {
-      navigate("/signup");
+      navigate("/Signin");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function ProfileEdit() {
       try {
         const { data, error, status } = await supabase
           .from("users")
-          .select("full_name, email, password")
+          .select("full_name, email, password, use_allergy_filters")
           .eq("id", userId)
           .maybeSingle();
 
@@ -47,7 +47,7 @@ export default function ProfileEdit() {
             email: data.email || "",
             password: data.password || "",
           });
-          setUseAllergyFilters(data.use_allergy_filters);
+          setUseAllergyFilters(data.use_allergy_filters || false);
         } else {
           console.warn("No user found with UUID:", userId);
         }
@@ -98,6 +98,11 @@ export default function ProfileEdit() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("pendingUserId");
+    navigate("/signinflow");
   };
 
   const handleDeleteAccount = async () => {
@@ -184,9 +189,10 @@ export default function ProfileEdit() {
         </section>
 
         <div className="danger-zone">
-          <button className="delete-account-btn" onClick={handleDeleteAccount}>
-            <HeartCrack size={20} /> Delete Account
+          <button className="logout-account-btn" onClick={handleLogout}>
+            <LogOut size={20} /> Log Out
           </button>
+          
         </div>
       </div>
 

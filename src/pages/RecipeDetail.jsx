@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, ChevronLeft } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { supabase } from '../supabase';
 import BackButton from '../components/BackButton';
 import Preloader from '../components/PreLoader';
@@ -44,9 +44,9 @@ export default function RecipeDetail() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     const handleScroll = () => {
-      if (window.scrollY > 250) {
+      if (window.scrollY > 240) {
         setScrolled(true);
       } else {
         setScrolled(false);
@@ -139,14 +139,6 @@ export default function RecipeDetail() {
 
   return (
     <div className="recipe-detail-page">
-      <div className={`sticky-header ${scrolled ? 'visible' : ''}`}>
-        <BackButton to="/feed" />
-        <h2 className="sticky-title">{recipe.title_en}</h2>
-        <button className={`fav-btn-small ${isFavorited ? 'active' : ''}`} onClick={toggleFavorite}>
-          <Heart size={20} fill={isFavorited ? '#f0660c' : 'none'} color={isFavorited ? '#f0660c' : '#fff'} />
-        </button>
-      </div>
-
       <div className="recipe-hero">
         <img src={recipe.recipe_img} alt={recipe.title_en} className="hero-img" />
         <div className="detail-header-actions">
@@ -155,21 +147,26 @@ export default function RecipeDetail() {
       </div>
 
       <div className="recipe-content-body">
-        <header className="recipe-main-header">
-           <div className="title-row">
-             <h1 className="hero-title">{recipe.title_en}</h1>
-             <button 
-                className={`main-fav-btn ${isFavorited ? 'active' : ''}`} 
-                onClick={toggleFavorite}
-              >
-                <Heart 
-                  size={28} 
-                  color={isFavorited ? '#f0660c' : '#fff'} 
-                  fill={isFavorited ? '#f0660c' : 'none'} 
-                  strokeWidth={2.5}
-                />
-              </button>
-           </div>
+        <header className={`recipe-main-header sticky-header-container ${scrolled ? 'scrolled' : ''}`}>
+          <div className="title-row">
+            {scrolled && (
+              <div className="sticky-back-wrapper-active">
+                <BackButton to="/feed" />
+              </div>
+            )}
+            <h1 className="hero-title">{recipe.title_en}</h1>
+            <button 
+              className={`main-fav-btn ${isFavorited ? 'active' : ''}`} 
+              onClick={toggleFavorite}
+            >
+              <Heart 
+                size={28} 
+                color={isFavorited ? '#f0660c' : '#fff'} 
+                fill={isFavorited ? '#f0660c' : 'none'} 
+                strokeWidth={2.5}
+              />
+            </button>
+          </div>
         </header>
 
         <section className="detail-section">

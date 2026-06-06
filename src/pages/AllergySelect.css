@@ -185,3 +185,51 @@
 .continue-submit-link:active {
   transform: scale(0.98);
 }
+
+.allergies-multi-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.allergy-chip {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.allergy-chip:hover:not(.selected) {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(27, 11, 3, 0.8);
+}
+
+.allergy-chip.selected {
+  background: var(--senet-orange);
+  border-color: var(--senet-orange);
+  color: white;
+  box-shadow: 0 4px 15px rgba(240, 102, 12, 0.3);
+}
+
+/* Active Pressed Effect */
+.allergy-chip:active {
+  transform: scale(0.96);
+}
+
+button.continue-submit-link {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}

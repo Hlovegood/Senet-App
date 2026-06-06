@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 import BackButton from '../components/BackButton';
 import './AllergySelect.css';
 
-export default function AllergySelect() {
+export default function AllergyEdit() {
   const [allergies, setAllergies] = useState([]);
   const [hasNoAllergies, setHasNoAllergies] = useState(false);
   const [selectedAllergyIds, setSelectedAllergyIds] = useState([]);
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
   const userId = localStorage.getItem("pendingUserId")?.trim();
 
@@ -17,16 +18,32 @@ export default function AllergySelect() {
       return;
     }
 
-    const fetchAllergies = async () => {
-      const { data, error } = await supabase
-        .from('allergies')
-        .select('id, name_en');
-      
-      if (!error && data) {
-        setAllergies(data);
+    const fetchAllergyData = async () => {
+      try {
+        const { data: globalAllergies } = await supabase
+          .from('allergies')
+          .select('id, name_en');
+        
+        if (globalAllergies) setAllergies(globalAllergies);
+
+        const { data: userSavedAllergies } = await supabase
+          .from('user_allergies')
+          .select('allergy_id')
+          .eq('user_id', userId);
+
+        if (userSavedAllergies && userSavedAllergies.length > 0) {
+          const savedIds = userSavedAllergies.map(item => item.allergy_id);
+          setSelectedAllergyIds(savedIds);
+          setHasNoAllergies(false);
+        } else {
+          setHasNoAllergies(true);
+        }
+      } catch (err) {
+        console.error("Error loading profile allergy datasets:", err.message);
       }
     };
-    fetchAllergies();
+
+    fetchAllergyData();
   }, [userId, navigate]);
 
   const handleAllergyToggle = (id) => {
@@ -43,10 +60,8 @@ export default function AllergySelect() {
     setSelectedAllergyIds([]);
   };
 
-  const handleSaveAndContinue = async (e) => {
-    e.preventDefault();
-    if (!hasNoAllergies && selectedAllergyIds.length === 0) return;
-
+  const handleSaveChanges = async () => {
+    setSaving(true);
     try {
       await supabase
         .from('user_allergies')
@@ -66,9 +81,11 @@ export default function AllergySelect() {
         if (error) throw error;
       }
 
-      navigate("/finish");
+      navigate("/profile-edit");
     } catch (err) {
-      console.error("Error saving user allergies:", err.message);
+      console.error("Failed to commit profile updates:", err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -76,15 +93,12 @@ export default function AllergySelect() {
     <div className="allergy-wrapper">
       <div className="allergy-screen">
         <div className="allergy-header">
-          <BackButton to="/cuisines" />
-          <Link to="/finish" className="skip-link-btn">
-            Skip
-          </Link>
+          <BackButton to="/profile-edit" />
         </div>
 
         <div className="allergy-title-section">
-          <h2 className="allergy-main-title">Allergies</h2>
-          <p className="allergy-subtitle">Choose food allergies you have</p>
+          <h2 className="allergy-main-title">Edit Allergies</h2>
+          <p className="allergy-subtitle">Modify your current dietary safety limitations</p>
         </div>
 
         <div className="allergy-options-container">
@@ -118,11 +132,11 @@ export default function AllergySelect() {
         <div className="allergy-footer">
           <button 
             type="button"
-            onClick={handleSaveAndContinue}
-            className={`continue-submit-link ${(hasNoAllergies || selectedAllergyIds.length > 0) ? '' : 'disabled'}`}
-            disabled={!hasNoAllergies && selectedAllergyIds.length === 0}
+            onClick={handleSaveChanges}
+            className={`continue-submit-link ${saving ? 'disabled' : ''}`}
+            disabled={saving}
           >
-            Continue
+            {saving ? "Saving changes..." : "Save Preferences"}
           </button>
         </div>
       </div>
