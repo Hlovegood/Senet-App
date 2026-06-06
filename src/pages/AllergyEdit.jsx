@@ -32,11 +32,15 @@ export default function AllergyEdit() {
           .eq('user_id', userId);
 
         if (userSavedAllergies && userSavedAllergies.length > 0) {
-          const savedIds = userSavedAllergies.map(item => item.allergy_id);
+          const savedIds = userSavedAllergies.map(item => 
+            item.allergy_id ? item.allergy_id.toString().trim().toLowerCase() : ''
+          ).filter(Boolean);
+          
           setSelectedAllergyIds(savedIds);
           setHasNoAllergies(false);
         } else {
           setHasNoAllergies(true);
+          setSelectedAllergyIds([]);
         }
       } catch (err) {
         console.error("Error loading profile allergy datasets:", err.message);
@@ -47,43 +51,60 @@ export default function AllergyEdit() {
   }, [userId, navigate]);
 
   const handleAllergyToggle = (id) => {
-    setHasNoAllergies(false);
-    if (selectedAllergyIds.includes(id)) {
-      setSelectedAllergyIds(selectedAllergyIds.filter(item => item !== id));
-    } else {
-      setSelectedAllergyIds([...selectedAllergyIds, id]);
-    }
+    if (!id) return;
+    const cleanId = id.toString().trim().toLowerCase();
+    
+    setSelectedAllergyIds((prevIds) => {
+      let updatedIds;
+      if (prevIds.includes(cleanId)) {
+        updatedIds = prevIds.filter(item => item !== cleanId);
+      } else {
+        updatedIds = [...prevIds, cleanId];
+      }
+      setHasNoAllergies(updatedIds.length === 0);
+      return updatedIds;
+    });
   };
 
   const handleNoneToggle = () => {
-    setHasNoAllergies(!hasNoAllergies);
-    setSelectedAllergyIds([]);
+    setHasNoAllergies(prev => {
+      const nextState = !prev;
+      if (nextState) {
+        setSelectedAllergyIds([]);
+      }
+      return nextState;
+    });
   };
 
   const handleSaveChanges = async () => {
+    if (saving) return;
     setSaving(true);
+    
     try {
-      await supabase
+      const { error: deleteError } = await supabase
         .from('user_allergies')
         .delete()
         .eq('user_id', userId);
 
-      if (selectedAllergyIds.length > 0) {
+      if (deleteError) throw deleteError;
+
+      if (selectedAllergyIds.length > 0 && !hasNoAllergies) {
         const rowsToInsert = selectedAllergyIds.map(id => ({
           user_id: userId,
           allergy_id: id
         }));
 
-        const { error } = await supabase
+        const { error: insertError } = await supabase
           .from('user_allergies')
           .insert(rowsToInsert);
 
-        if (error) throw error;
+        if (insertError) throw insertError;
       }
 
       navigate("/profile-edit");
     } catch (err) {
       console.error("Failed to commit profile updates:", err.message);
+      alert("Error saving preferences. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -114,7 +135,8 @@ export default function AllergyEdit() {
 
           <div className="allergies-multi-grid">
             {allergies.map((allergy) => {
-              const isSelected = selectedAllergyIds.includes(allergy.id);
+              if (!allergy.id) return null;
+              const isSelected = selectedAllergyIds.includes(allergy.id.toString().trim().toLowerCase());
               return (
                 <button
                   key={allergy.id}
@@ -133,7 +155,7 @@ export default function AllergyEdit() {
           <button 
             type="button"
             onClick={handleSaveChanges}
-            className={`continue-submit-link ${saving ? 'disabled' : ''}`}
+            className="continue-submit-link"
             disabled={saving}
           >
             {saving ? "Saving changes..." : "Save Preferences"}

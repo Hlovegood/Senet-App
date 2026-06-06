@@ -19,6 +19,8 @@ export default function Feed() {
 
     const fetchFeedData = async () => {
       try {
+        const masterFilterOn = localStorage.getItem(`useAllergyFilters_${userId}`) !== "false";
+
         const { data: userProfile, error: profileError } = await supabase
           .from('users')
           .select('favorite_cuisines')
@@ -47,39 +49,42 @@ export default function Feed() {
         }
 
         const { data: recipeData, error: recipeError } = await query;
-
         if (recipeError) throw recipeError;
 
         let filteredRecipes = recipeData || [];
 
-        const { data: allergyRows } = await supabase
-          .from('user_allergies')
-          .select('*')
-          .eq('user_id', userId);
+        if (masterFilterOn && filteredRecipes.length > 0) {
+          const { data: allergyRows } = await supabase
+            .from('user_allergies')
+            .select('allergy_id')
+            .eq('user_id', userId);
 
-        const activeAllergyIds = allergyRows?.map(row => {
-          const idStr = row.allergy_id || row.id || '';
-          return idStr.toString().trim();
-        }) || [];
+          const activeAllergyIds = allergyRows
+            ?.map(row => row.allergy_id?.toString().trim().toLowerCase())
+            .filter(Boolean) || [];
 
-        if (activeAllergyIds.length > 0 && filteredRecipes.length > 0) {
-          const recipeIds = filteredRecipes.map(r => r.id);
-          const { data: ingredientsData } = await supabase
-            .from('ingredients')
-            .select('recipe_id, allergy_triggers')
-            .in('recipe_id', recipeIds);
+          if (activeAllergyIds.length > 0) {
+            const recipeIds = filteredRecipes.map(r => r.id);
+            
+            const { data: ingredientsData } = await supabase
+              .from('ingredients')
+              .select('recipe_id, allergy_triggers')
+              .in('recipe_id', recipeIds);
 
-          const dangerousRecipeIds = new Set();
-          ingredientsData?.forEach(ing => {
-            if (ing.allergy_triggers) {
-              const triggerId = ing.allergy_triggers.toString().trim();
-              if (activeAllergyIds.includes(triggerId)) {
-                dangerousRecipeIds.add(ing.recipe_id);
+            const dangerousRecipeIds = new Set();
+            
+            ingredientsData?.forEach(ing => {
+              if (ing.allergy_triggers) {
+                const triggerValue = ing.allergy_triggers.toString().trim().toLowerCase();
+                
+                if (activeAllergyIds.includes(triggerValue)) {
+                  dangerousRecipeIds.add(ing.recipe_id);
+                }
               }
-            }
-          });
+            });
 
-          filteredRecipes = filteredRecipes.filter(recipe => !dangerousRecipeIds.has(recipe.id));
+            filteredRecipes = filteredRecipes.filter(recipe => !dangerousRecipeIds.has(recipe.id));
+          }
         }
 
         const combined = filteredRecipes.map((recipe, index) => {
@@ -114,7 +119,7 @@ export default function Feed() {
         ) : (
           <div className="bento-grid">
             {recipes.length === 0 ? (
-              <div className="empty-text">No recipes match your preferences.</div>
+              <div className="empty-text">No recipes match your preferences and dietary conditions.</div>
             ) : (
               recipes.map((recipe) => (
                 <Link 

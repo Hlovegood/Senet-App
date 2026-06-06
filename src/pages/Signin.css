@@ -92,6 +92,9 @@
 .content-visible { 
   opacity: 1; 
   transition: opacity 1s ease-in; 
+     display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .signin-carousel {

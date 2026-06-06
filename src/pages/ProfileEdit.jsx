@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { SquarePen, HeartCrack, X, LogOut } from "lucide-react";
+import { SquarePen, X, LogOut } from "lucide-react";
 import { supabase } from "../supabase";
 import BackButton from "../components/BackButton";
 import Preloader from "../components/PreLoader";
@@ -33,7 +33,7 @@ export default function ProfileEdit() {
       try {
         const { data, error, status } = await supabase
           .from("users")
-          .select("full_name, email, password, use_allergy_filters")
+          .select("full_name, email, password")
           .eq("id", userId)
           .maybeSingle();
 
@@ -47,10 +47,10 @@ export default function ProfileEdit() {
             email: data.email || "",
             password: data.password || "",
           });
-          setUseAllergyFilters(data.use_allergy_filters || false);
-        } else {
-          console.warn("No user found with UUID:", userId);
         }
+        
+        const localFilterState = localStorage.getItem(`useAllergyFilters_${userId}`) !== "false";
+        setUseAllergyFilters(localFilterState);
       } catch (err) {
         console.error("Fetch Error:", err.message);
       } finally {
@@ -87,34 +87,15 @@ export default function ProfileEdit() {
     }
   };
 
-  const toggleAllergyFilters = async () => {
+  const toggleAllergyFilters = () => {
     const newState = !useAllergyFilters;
     setUseAllergyFilters(newState);
-    try {
-      await supabase
-        .from("users")
-        .update({ use_allergy_filters: newState })
-        .eq("id", userId);
-    } catch (err) {
-      console.error(err);
-    }
+    localStorage.setItem(`useAllergyFilters_${userId}`, newState ? "true" : "false");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("pendingUserId");
     navigate("/signinflow");
-  };
-
-  const handleDeleteAccount = async () => {
-    if (window.confirm("Permanent Action: Delete your account?")) {
-      try {
-        await supabase.from("users").delete().eq("id", userId);
-        localStorage.removeItem("pendingUserId");
-        navigate("/signup");
-      } catch (err) {
-        console.error(err);
-      }
-    }
   };
 
   if (isLoading) return <Preloader />;
@@ -192,7 +173,6 @@ export default function ProfileEdit() {
           <button className="logout-account-btn" onClick={handleLogout}>
             <LogOut size={20} /> Log Out
           </button>
-          
         </div>
       </div>
 
